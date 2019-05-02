@@ -15,7 +15,8 @@ public class EmployeeRestController {
 	
 	private EmployeeDAO employeeDAO;
 	
-	// quick and dirty: inject employee dao
+	// quick and dirty: inject employee dao - We don't need @Autowired as there is only one constructor
+	@Autowired
 	public EmployeeRestController(EmployeeDAO employeeDAO) {
 		this.employeeDAO = employeeDAO;
 	}
