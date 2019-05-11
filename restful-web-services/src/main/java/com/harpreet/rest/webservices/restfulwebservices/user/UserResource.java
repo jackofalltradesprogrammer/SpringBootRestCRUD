@@ -46,4 +46,29 @@ public class UserResource {
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
 		return ResponseEntity.created(location).build();
 	}
+	
+	@GetMapping("/users/{userId}/posts")
+	public List<Post> retrievePosts(@PathVariable int userId) {
+		List<Post> posts = service.findAllPosts(userId);
+		return posts;
+	}
+	
+	@GetMapping("/users/{id}/posts/{post_id}")
+	public Post retrieveUser(@PathVariable("id") int userId, @PathVariable int post_id) {
+		Post post = service.findPost(userId, post_id);
+		
+		return post;
+	}
+	
+	@PostMapping("/users/{id}/posts")
+	public ResponseEntity<Object> createPost(@RequestBody Post post, @PathVariable ("id") int userId) {
+		// @RequestBody tries to map whatever is coming in request to User
+		Post savedPost = service.savePost(post, userId);
+		
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("users/{"+savedPost.getUserId()+"}").buildAndExpand(savedPost.getId()).toUri();
+		return ResponseEntity.created(location).build();
+	}
+	
+	
+	
 }
