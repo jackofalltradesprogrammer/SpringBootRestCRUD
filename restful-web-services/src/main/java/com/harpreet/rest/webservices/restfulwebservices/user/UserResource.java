@@ -1,11 +1,14 @@
 package com.harpreet.rest.webservices.restfulwebservices.user;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 import java.net.URI;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +33,20 @@ public class UserResource {
 
 	// retrieve User with it
 	@GetMapping("/users/{id}")
-	public User retrieveUser(@PathVariable int id) {
+	public Resource<User> retrieveUser(@PathVariable int id) {
 		User user = service.findOne(id);
 		if(user == null) 
 			throw new UserNotFoundException("id - " + id);
-		return user;
+		
+		// "all-users", SERVER_PATH + "/users"
+		// retrieveAllUsers _ Using HATEOAS from SpringBoot - use method signatures and instead of hard-coding
+		Resource<User> resource = new Resource<User>(user);
+		// create links from methods and linkTo() is used to get a link on retrieveAllusers
+		ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		// refer to "all-users" inside the HATEOAS
+		resource.add(linkTo.withRel("all-users"));
+		// return resource with data and links to all-users
+		return resource;
 	}
 
 	// input - details of user
