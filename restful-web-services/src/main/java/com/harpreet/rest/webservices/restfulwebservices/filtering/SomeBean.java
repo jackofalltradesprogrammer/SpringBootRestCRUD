@@ -1,8 +1,10 @@
 package com.harpreet.rest.webservices.restfulwebservices.filtering;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value = {"field1", "field2"})
+//@JsonIgnoreProperties(value = {"field1", "field2"})
+@JsonFilter("SomeBeanFilter") // For dynamic filtering
 public class SomeBean {
 	
 	private String field1;
